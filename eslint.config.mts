@@ -22,6 +22,15 @@ export default tseslint.config(
 		},
 	},
 	...obsidianmd.configs.recommended,
+	{
+		plugins: { obsidianmd },
+		rules: {
+			// Allow strings starting with the product brand names in their canonical casing.
+			'obsidianmd/ui/sentence-case': ['error', {
+				ignoreRegex: ['^mail2note', '^m2n_'],
+			}],
+		},
+	},
 	globalIgnores([
 		"node_modules",
 		"dist",
@@ -29,6 +38,8 @@ export default tseslint.config(
 		"eslint.config.js",
 		"version-bump.mjs",
 		"versions.json",
+		"vitest.config.ts",
+		"tests/",
 		"main.js",
 	]),
 );

@@ -1,8 +1,12 @@
-/*
+/* mail2note plugin styles */
 
-This CSS file will be included with your plugin, and
-available in the app when your plugin is enabled.
+.mail2note-validation {
+	display: none;
+	color: var(--text-error);
+	font-size: var(--font-ui-smaller);
+	margin: 2px 0 0;
+}
 
-If your plugin does not need CSS, delete this file.
-
-*/
+.mail2note-validation--visible {
+	display: block;
+}
