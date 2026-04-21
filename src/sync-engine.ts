@@ -82,10 +82,16 @@ export class SyncEngine {
 		} else if (error.kind === 'rate-limited') {
 			this.backoffUntil = Date.now() + error.retryAfter * 1000;
 			this.updateStatus('mail2note: rate limited');
-		} else {
+		} else if (error.kind === 'server-error') {
+			console.error(`[mail2note] Server error: HTTP ${error.status}`);
 			this.applyBackoff();
 			this.updateStatus('mail2note: error');
 			if (isManual) new Notice('mail2note: sync failed — server error');
+		} else {
+			console.error(`[mail2note] Network error: ${error.message}`);
+			this.applyBackoff();
+			this.updateStatus('mail2note: error');
+			if (isManual) new Notice('mail2note: sync failed — network error');
 		}
 	}
 
