@@ -54,6 +54,7 @@ export class SyncEngine {
 			}
 			this.backoffMultiplier = 1;
 			this.backoffUntil = 0;
+			this.haltedDueToAuth = false;
 			const ts = new Date().toLocaleTimeString();
 			const label = notes.length === 0
 				? `mail2note: up to date (${ts})`
@@ -112,6 +113,16 @@ export class SyncEngine {
 			return true;
 		}
 
+		const attachmentBuffers: { filename: string; data: ArrayBuffer }[] = [];
+		for (const att of note.attachments) {
+			const attResult = await client.getAttachment(note.id, att.filename);
+			if (!attResult.ok) {
+				console.error(`[mail2note] Failed to download attachment "${att.filename}" for note ${note.id}: ${attResult.kind}`);
+				return false;
+			}
+			attachmentBuffers.push({ filename: att.filename, data: attResult.data });
+		}
+
 		const folder = normalizePath(settings.targetFolder);
 		await ensureFolder(this.app.vault, folder);
 
@@ -127,23 +138,17 @@ export class SyncEngine {
 			return false;
 		}
 
-		for (const att of note.attachments) {
-			const attResult = await client.getAttachment(note.id, att.filename);
-			if (!attResult.ok) {
-				console.error(`[mail2note] Failed to download attachment "${att.filename}" for note ${note.id}: ${attResult.kind}`);
-				return false;
-			}
+		for (const { filename, data } of attachmentBuffers) {
 			const attFolder = resolveAttachmentFolder(folder, noteBasename, settings.attachmentFolderStrategy);
 			await ensureFolder(this.app.vault, attFolder);
-			const dotIdx = att.filename.lastIndexOf('.');
-			const attBase = dotIdx > 0 ? att.filename.slice(0, dotIdx) : att.filename;
-			const attExt = dotIdx > 0 ? att.filename.slice(dotIdx + 1) : '';
+			const dotIdx = filename.lastIndexOf('.');
+			const attBase = dotIdx > 0 ? filename.slice(0, dotIdx) : filename;
+			const attExt = dotIdx > 0 ? filename.slice(dotIdx + 1) : '';
 			const attPath = await resolveUniquePath(this.app.vault, attFolder, sanitizeFilename(attBase), attExt);
 			try {
-				await this.app.vault.createBinary(attPath, attResult.data);
+				await this.app.vault.createBinary(attPath, data);
 			} catch (err) {
 				console.error(`[mail2note] Failed to write attachment "${attPath}":`, err);
-				return false;
 			}
 		}
 
