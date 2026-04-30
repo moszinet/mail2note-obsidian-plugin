@@ -1,6 +1,6 @@
 # mail2note
 
-Forward emails to your personal mail2note address and have them appear automatically in your Obsidian vault as Markdown notes, complete with attachments.
+Forward emails to your personal mail2note address and have them appear automatically in your vault as Markdown notes, complete with attachments.
 
 ## Install
 

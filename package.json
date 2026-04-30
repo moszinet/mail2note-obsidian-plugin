@@ -1,7 +1,7 @@
 {
 	"name": "mail2note",
-	"version": "0.1.0",
-	"description": "Obsidian community plugin that syncs emails from mail2note into your vault.",
+	"version": "0.1.1",
+	"description": "Sync emails sent to your mail2note address into your vault as Markdown notes.",
 	"keywords": [
 		"obsidian-plugin",
 		"mail2note",

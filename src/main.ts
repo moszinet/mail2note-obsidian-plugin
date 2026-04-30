@@ -30,7 +30,7 @@ export default class Mail2NotePlugin extends Plugin {
 
 		if (!Platform.isMobile) {
 			this.statusBarItem = this.addStatusBarItem();
-			this.statusBarItem.setText('mail2note: idle');
+			this.statusBarItem.setText('Mail2note: idle');
 		}
 
 		this.addCommand({

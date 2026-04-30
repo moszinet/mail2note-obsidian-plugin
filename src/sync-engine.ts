@@ -38,7 +38,7 @@ export class SyncEngine {
 
 	private async runCycle(isManual: boolean): Promise<void> {
 		this.isSyncing = true;
-		this.updateStatus('mail2note: syncing…');
+		this.updateStatus('Mail2note: syncing…');
 		try {
 			const client = this.makeApiClient();
 			const result = await client.getNotes();
@@ -57,15 +57,15 @@ export class SyncEngine {
 			this.haltedDueToAuth = false;
 			const ts = new Date().toLocaleTimeString();
 			const label = notes.length === 0
-				? `mail2note: up to date (${ts})`
-				: `mail2note: synced ${synced} note${synced !== 1 ? 's' : ''} (${ts})`;
+				? `Mail2note: up to date (${ts})`
+				: `Mail2note: synced ${synced} note${synced !== 1 ? 's' : ''} (${ts})`;
 			this.updateStatus(label);
 			if (isManual) new Notice(label);
 		} catch (err) {
 			console.error('[mail2note] Unexpected sync error:', err);
 			this.applyBackoff();
-			this.updateStatus('mail2note: error');
-			if (isManual) new Notice('mail2note: sync failed — see the developer console for details');
+			this.updateStatus('Mail2note: error');
+			if (isManual) new Notice('Mail2note: sync failed — see the developer console for details');
 		} finally {
 			this.isSyncing = false;
 		}
@@ -74,25 +74,25 @@ export class SyncEngine {
 	private handleError(error: ApiError, isManual: boolean): void {
 		if (error.kind === 'unauthorized') {
 			this.haltedDueToAuth = true;
-			new Notice('mail2note: invalid API key — update it in settings to resume sync');
-			this.updateStatus('mail2note: auth error');
+			new Notice('Mail2note: invalid API key — update it in settings to resume sync');
+			this.updateStatus('Mail2note: auth error');
 		} else if (error.kind === 'forbidden') {
 			this.haltedDueToAuth = true;
-			new Notice('mail2note: email not verified — verify your email at mail2note.com to resume sync');
-			this.updateStatus('mail2note: auth error');
+			new Notice('Mail2note: email not verified — verify your email at mail2note.com to resume sync');
+			this.updateStatus('Mail2note: auth error');
 		} else if (error.kind === 'rate-limited') {
 			this.backoffUntil = Date.now() + error.retryAfter * 1000;
-			this.updateStatus('mail2note: rate limited');
+			this.updateStatus('Mail2note: rate limited');
 		} else if (error.kind === 'server-error') {
 			console.error(`[mail2note] Server error: HTTP ${error.status}`);
 			this.applyBackoff();
-			this.updateStatus('mail2note: error');
-			if (isManual) new Notice('mail2note: sync failed — server error');
+			this.updateStatus('Mail2note: error');
+			if (isManual) new Notice('Mail2note: sync failed — server error');
 		} else {
 			console.error(`[mail2note] Network error: ${error.message}`);
 			this.applyBackoff();
-			this.updateStatus('mail2note: error');
-			if (isManual) new Notice('mail2note: sync failed — network error');
+			this.updateStatus('Mail2note: error');
+			if (isManual) new Notice('Mail2note: sync failed — network error');
 		}
 	}
 
@@ -128,7 +128,7 @@ export class SyncEngine {
 
 		const rawName = applyTemplate(settings.filenameTemplate, fm);
 		const safeName = sanitizeFilename(rawName);
-		const notePath = await resolveUniquePath(this.app.vault, folder, safeName, 'md');
+		const notePath = resolveUniquePath(this.app.vault, folder, safeName, 'md');
 		const noteBasename = notePath.slice(folder.length + 1).replace(/\.md$/, '');
 
 		try {
@@ -144,7 +144,7 @@ export class SyncEngine {
 			const dotIdx = filename.lastIndexOf('.');
 			const attBase = dotIdx > 0 ? filename.slice(0, dotIdx) : filename;
 			const attExt = dotIdx > 0 ? filename.slice(dotIdx + 1) : '';
-			const attPath = await resolveUniquePath(this.app.vault, attFolder, sanitizeFilename(attBase), attExt);
+			const attPath = resolveUniquePath(this.app.vault, attFolder, sanitizeFilename(attBase), attExt);
 			try {
 				await this.app.vault.createBinary(attPath, data);
 			} catch (err) {
@@ -209,7 +209,7 @@ async function ensureFolder(vault: Vault, path: string): Promise<void> {
 	}
 }
 
-async function resolveUniquePath(vault: Vault, folder: string, base: string, ext: string): Promise<string> {
+function resolveUniquePath(vault: Vault, folder: string, base: string, ext: string): string {
 	const suffix = ext ? `.${ext}` : '';
 	let path = normalizePath(`${folder}/${base}${suffix}`);
 	let counter = 1;

@@ -6,9 +6,9 @@ describe('Mail2NotePlugin', () => {
 		const fakeApp = {
 			vault: {
 				getAbstractFileByPath: () => null,
-				create: async () => null,
-				createBinary: async () => null,
-				createFolder: async () => null,
+				create: () => null,
+				createBinary: () => null,
+				createFolder: () => null,
 			},
 		} as never;
 		const fakeManifest = { id: 'mail2note', version: '0.1.0' } as never;

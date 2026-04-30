@@ -50,8 +50,7 @@ export class Mail2NoteSettingTab extends PluginSettingTab {
 				.setName('API key')
 				.setDesc('Your m2n_ key from the mail2note dashboard.')
 				.addText(text => {
-					text.setPlaceholder('m2n_...')
-						.setValue(this.plugin.settings.apiKey)
+					text.setValue(this.plugin.settings.apiKey)
 						.onChange(async (value) => {
 							const trimmed = value.trim();
 							this.plugin.settings.apiKey = trimmed;
@@ -73,8 +72,7 @@ export class Mail2NoteSettingTab extends PluginSettingTab {
 			.setName('Target folder')
 			.setDesc('Vault folder where imported notes are saved.')
 			.addText(text => {
-				text.setPlaceholder('mail2note')
-					.setValue(this.plugin.settings.targetFolder)
+				text.setValue(this.plugin.settings.targetFolder)
 					.onChange(async (value) => {
 						this.plugin.settings.targetFolder = value.trim() || 'mail2note';
 						await this.plugin.saveSettings();
