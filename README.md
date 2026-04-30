@@ -30,5 +30,4 @@ You can also trigger an immediate sync via the ribbon icon or **Command palette 
 ## Links
 
 - Website: [https://mail2note.com](https://mail2note.com)
-- Backend repository: [https://github.com/moszinet/mail2note](https://github.com/moszinet/mail2note)
 - Issues: [https://github.com/moszinet/mail2note-obsidian-plugin/issues](https://github.com/moszinet/mail2note-obsidian-plugin/issues)
