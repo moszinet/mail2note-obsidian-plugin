@@ -1,5 +1,6 @@
 import { App, Notice, Vault, normalizePath } from 'obsidian';
 import { ApiClient, ApiError, ApiNote } from './api-client';
+import { MAIL2NOTE_API_BASE_URL } from './config';
 import type { Mail2NoteSettings } from './settings';
 
 const DELIVERED_ID_LIMIT = 5000;
@@ -32,8 +33,7 @@ export class SyncEngine {
 	}
 
 	private makeApiClient(): ApiClient {
-		const s = this.getSettings();
-		return new ApiClient(s.apiBaseUrl, s.apiKey);
+		return new ApiClient(MAIL2NOTE_API_BASE_URL, this.getSettings().apiKey);
 	}
 
 	private async runCycle(isManual: boolean): Promise<void> {
