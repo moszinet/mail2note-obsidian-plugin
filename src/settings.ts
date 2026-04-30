@@ -1,5 +1,6 @@
 import { App, PluginSettingTab, Setting } from 'obsidian';
 import { MAIL2NOTE_API_BASE_URL } from './config';
+import { FolderSuggester } from './folder-suggester';
 import type Mail2NotePlugin from './main';
 
 export type AttachmentFolderStrategy = 'same' | 'per-note' | 'shared';
@@ -67,7 +68,7 @@ export class Mail2NoteSettingTab extends PluginSettingTab {
 
 		new Setting(containerEl).setName('Import').setHeading();
 
-		// Target folder
+		// Target folder — text input with vault-folder autocomplete
 		new Setting(containerEl)
 			.setName('Target folder')
 			.setDesc('Vault folder where imported notes are saved.')
@@ -78,6 +79,7 @@ export class Mail2NoteSettingTab extends PluginSettingTab {
 						this.plugin.settings.targetFolder = value.trim() || 'mail2note';
 						await this.plugin.saveSettings();
 					});
+				new FolderSuggester(this.app, text.inputEl);
 			});
 
 		// Filename template
