@@ -151,6 +151,24 @@ export class TFolder {
 	children: unknown[] = [];
 }
 
+export class AbstractInputSuggest<T> {
+	app: unknown;
+	limit = 100;
+
+	constructor(app: unknown, _inputEl: unknown) {
+		this.app = app;
+	}
+
+	getSuggestions(_query: string): T[] | Promise<T[]> { return []; }
+	renderSuggestion(_value: T, _el: unknown): void {}
+	selectSuggestion(_value: T, _evt?: unknown): void {}
+	open(): void {}
+	close(): void {}
+	setValue(_value: string): void {}
+	getValue(): string { return ''; }
+	onSelect(_cb: (value: T, evt: unknown) => unknown): this { return this; }
+}
+
 export const Platform = {
 	isDesktop: true,
 	isMobile: false,
