@@ -1,10 +1,10 @@
 import { App, PluginSettingTab, Setting } from 'obsidian';
+import { MAIL2NOTE_API_BASE_URL } from './config';
 import type Mail2NotePlugin from './main';
 
 export type AttachmentFolderStrategy = 'same' | 'per-note' | 'shared';
 
 export interface Mail2NoteSettings {
-	apiBaseUrl: string;
 	apiKey: string;
 	targetFolder: string;
 	pollIntervalMinutes: number;
@@ -14,7 +14,6 @@ export interface Mail2NoteSettings {
 }
 
 export const DEFAULT_SETTINGS: Mail2NoteSettings = {
-	apiBaseUrl: 'https://mail2note.com',
 	apiKey: '',
 	targetFolder: 'mail2note',
 	pollIntervalMinutes: 1,
@@ -39,25 +38,10 @@ export class Mail2NoteSettingTab extends PluginSettingTab {
 
 		new Setting(containerEl).setName('Connection').setHeading();
 
-		// API base URL
-		{
-			const setting = new Setting(containerEl)
-				.setName('API base URL')
-				.setDesc('Change only if you are self-hosting mail2note. Default: https://mail2note.com')
-				.addText(text => {
-					text.setPlaceholder('https://mail2note.com')
-						.setValue(this.plugin.settings.apiBaseUrl)
-						.onChange(async (value) => {
-							const trimmed = value.trim();
-							this.plugin.settings.apiBaseUrl = trimmed;
-							await this.plugin.saveSettings();
-							this.plugin.onSettingsChanged();
-							setValidation(errorEl, validateUrl(trimmed));
-						});
-				});
-			const errorEl = setting.settingEl.createEl('p', { cls: 'mail2note-validation' });
-			setValidation(errorEl, validateUrl(this.plugin.settings.apiBaseUrl));
-		}
+		// API base URL — read-only (the URL is hardcoded; this row is informational only)
+		new Setting(containerEl)
+			.setName('API base URL')
+			.setDesc(MAIL2NOTE_API_BASE_URL);
 
 		// API key
 		{
@@ -144,19 +128,6 @@ export class Mail2NoteSettingTab extends PluginSettingTab {
 						this.plugin.onSettingsChanged();
 					});
 			});
-	}
-}
-
-function validateUrl(url: string): string {
-	if (!url) return 'API base URL is required.';
-	try {
-		const parsed = new URL(url);
-		if (parsed.protocol !== 'https:' && parsed.protocol !== 'http:') {
-			return 'URL must use http or https.';
-		}
-		return '';
-	} catch {
-		return 'Invalid URL format.';
 	}
 }
 
