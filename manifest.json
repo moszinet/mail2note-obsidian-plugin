@@ -2,7 +2,7 @@
 	"id": "mail2note",
 	"name": "mail2note",
 	"version": "0.1.0",
-	"minAppVersion": "1.5.0",
+	"minAppVersion": "1.6.6",
 	"description": "Sync emails sent to your mail2note address into your Obsidian vault as markdown notes.",
 	"author": "Szilveszter Molnar",
 	"authorUrl": "https://mail2note.com",
