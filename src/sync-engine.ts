@@ -1,7 +1,7 @@
 import { App, Notice, Vault, normalizePath } from 'obsidian';
 import { ApiClient, ApiError, ApiNote } from './api-client';
 import { MAIL2NOTE_API_BASE_URL } from './config';
-import type { Mail2NoteSettings } from './settings';
+import type { AttachmentFolderStrategy, Mail2NoteSettings } from './settings';
 
 const DELIVERED_ID_LIMIT = 5000;
 const MAX_BACKOFF_MULTIPLIER = 8;
@@ -220,8 +220,7 @@ async function resolveUniquePath(vault: Vault, folder: string, base: string, ext
 	return path;
 }
 
-function resolveAttachmentFolder(noteFolder: string, noteBasename: string, strategy: string): string {
+function resolveAttachmentFolder(noteFolder: string, noteBasename: string, strategy: AttachmentFolderStrategy): string {
 	if (strategy === 'per-note') return normalizePath(`${noteFolder}/${noteBasename}`);
-	if (strategy === 'shared') return normalizePath(`${noteFolder}/attachments`);
 	return noteFolder;
 }

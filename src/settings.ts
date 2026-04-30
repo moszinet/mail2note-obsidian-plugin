@@ -3,7 +3,7 @@ import { MAIL2NOTE_API_BASE_URL } from './config';
 import { FolderSuggester } from './folder-suggester';
 import type Mail2NotePlugin from './main';
 
-export type AttachmentFolderStrategy = 'same' | 'per-note' | 'shared';
+export type AttachmentFolderStrategy = 'same' | 'per-note';
 
 export interface Mail2NoteSettings {
 	apiKey: string;
@@ -102,7 +102,6 @@ export class Mail2NoteSettingTab extends PluginSettingTab {
 			.addDropdown(drop => {
 				drop.addOption('same', 'Same folder as note')
 					.addOption('per-note', 'Per-note subfolder')
-					.addOption('shared', 'Shared attachments folder')
 					.setValue(this.plugin.settings.attachmentFolderStrategy)
 					.onChange(async (value) => {
 						this.plugin.settings.attachmentFolderStrategy = value as AttachmentFolderStrategy;
